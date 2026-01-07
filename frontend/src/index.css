@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    /* Kid-friendly soft color palette */
+    --background: 45 100% 98%;
+    --foreground: 260 30% 25%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 260 30% 25%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 30% 25%;
+
+    /* Playful primary - Sky Blue */
+    --primary: 199 89% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Soft Mint Green */
+    --secondary: 158 64% 85%;
+    --secondary-foreground: 158 50% 25%;
+
+    /* Warm Peach */
+    --accent: 24 100% 85%;
+    --accent-foreground: 24 60% 30%;
+
+    --muted: 45 30% 95%;
+    --muted-foreground: 260 20% 50%;
+
+    /* Fun colors for variety */
+    --lavender: 270 67% 85%;
+    --lavender-foreground: 270 50% 30%;
+    
+    --coral: 10 80% 75%;
+    --coral-foreground: 10 60% 25%;
+    
+    --mint: 158 64% 75%;
+    --mint-foreground: 158 50% 20%;
+    
+    --sunshine: 45 100% 70%;
+    --sunshine-foreground: 45 80% 20%;
+    
+    --sky: 199 89% 70%;
+    --sky-foreground: 199 70% 20%;
+
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 260 20% 90%;
+    --input: 260 20% 90%;
+    --ring: 199 89% 58%;
+
+    --radius: 1rem;
+
+    /* Gradients */
+    --gradient-rainbow: linear-gradient(135deg, 
+      hsl(var(--lavender)) 0%, 
+      hsl(var(--sky)) 25%, 
+      hsl(var(--mint)) 50%, 
+      hsl(var(--sunshine)) 75%, 
+      hsl(var(--coral)) 100%
+    );
+    
+    --gradient-hero: linear-gradient(135deg, 
+      hsl(199 89% 95%) 0%, 
+      hsl(158 64% 95%) 50%, 
+      hsl(45 100% 95%) 100%
+    );
+    
+    --gradient-card-1: linear-gradient(145deg, hsl(var(--lavender)), hsl(270 67% 92%));
+    --gradient-card-2: linear-gradient(145deg, hsl(var(--mint)), hsl(158 64% 90%));
+    --gradient-card-3: linear-gradient(145deg, hsl(var(--sunshine)), hsl(45 100% 85%));
+    --gradient-card-4: linear-gradient(145deg, hsl(var(--coral)), hsl(10 80% 88%));
+    --gradient-card-5: linear-gradient(145deg, hsl(var(--sky)), hsl(199 89% 85%));
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(260 30% 50% / 0.15);
+    --shadow-playful: 0 8px 30px -8px hsl(260 30% 50% / 0.2);
+    --shadow-float: 0 12px 40px -12px hsl(260 30% 50% / 0.25);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 260 30% 10%;
+    --foreground: 45 100% 98%;
+
+    --card: 260 30% 15%;
+    --card-foreground: 45 100% 98%;
+
+    --popover: 260 30% 15%;
+    --popover-foreground: 45 100% 98%;
+
+    --primary: 199 89% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 158 40% 25%;
+    --secondary-foreground: 158 64% 85%;
+
+    --accent: 24 60% 30%;
+    --accent-foreground: 24 100% 85%;
+
+    --muted: 260 20% 20%;
+    --muted-foreground: 260 20% 70%;
+
+    --lavender: 270 40% 35%;
+    --coral: 10 50% 35%;
+    --mint: 158 40% 30%;
+    --sunshine: 45 60% 35%;
+    --sky: 199 60% 35%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 260 20% 25%;
+    --input: 260 20% 25%;
+    --ring: 199 89% 58%;
+
+    --gradient-hero: linear-gradient(135deg, 
+      hsl(260 30% 15%) 0%, 
+      hsl(199 40% 15%) 50%, 
+      hsl(158 30% 15%) 100%
+    );
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-nunito;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bubble;
+  }
+}
+
+@layer utilities {
+  .font-bubble {
+    font-family: 'Fredoka One', cursive;
+  }
+  
+  .font-nunito {
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .bg-gradient-rainbow {
+    background: var(--gradient-rainbow);
+  }
+
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-playful {
+    box-shadow: var(--shadow-playful);
+  }
+
+  .shadow-float {
+    box-shadow: var(--shadow-float);
+  }
+
+  .animate-bounce-soft {
+    animation: bounce-soft 2s ease-in-out infinite;
+  }
+
+  .animate-wiggle {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  .animate-pop {
+    animation: pop 0.3s ease-out;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes bounce-soft {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(2deg); }
+  }
+}
