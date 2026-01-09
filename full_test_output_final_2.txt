@@ -1,0 +1,52 @@
+============================= test session starts =============================
+platform win32 -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0 -- C:\Program Files\Python39\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\amfua\Documents\GitHub\kid_apps\little-learners-hub\backend
+configfile: pyproject.toml
+plugins: anyio-4.11.0, langsmith-0.4.37, asyncio-1.2.0
+asyncio: mode=auto, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 41 items
+
+backend\tests\test_api.py::TestHealthEndpoints::test_root PASSED         [  2%]
+backend\tests\test_api.py::TestHealthEndpoints::test_health PASSED       [  4%]
+backend\tests\test_api.py::TestAuthEndpoints::test_login_success PASSED  [  7%]
+backend\tests\test_api.py::TestAuthEndpoints::test_login_invalid_credentials PASSED [  9%]
+backend\tests\test_api.py::TestAuthEndpoints::test_register_success PASSED [ 12%]
+backend\tests\test_api.py::TestAuthEndpoints::test_register_duplicate_email PASSED [ 14%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_list_materials PASSED [ 17%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_list_materials_with_type_filter PASSED [ 19%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_list_materials_with_grade_filter PASSED [ 21%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_list_materials_with_search PASSED [ 24%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_get_material_by_id PASSED [ 26%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_get_material_not_found PASSED [ 29%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_download_material PASSED [ 31%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_like_material_with_auth PASSED [ 34%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_submit_material_as_educator PASSED [ 36%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_submit_material_as_parent_fails PASSED [ 39%]
+backend\tests\test_api.py::TestStatsEndpoints::test_get_stats PASSED     [ 41%]
+backend\tests\test_api.py::TestUsersEndpoints::test_get_current_user_with_auth PASSED [ 43%]
+backend\tests\test_database.py::TestPasswordOperations::test_password_hash_creates_different_hashes PASSED [ 46%]
+backend\tests\test_database.py::TestPasswordOperations::test_verify_password_correct PASSED [ 48%]
+backend\tests\test_database.py::TestUserOperations::test_create_and_get_user PASSED [ 51%]
+backend\tests\test_database.py::TestUserOperations::test_get_user_by_email_nonexistent PASSED [ 53%]
+backend\tests\test_database.py::TestMaterialOperations::test_create_and_get_material PASSED [ 56%]
+backend\tests\test_database.py::TestMaterialOperations::test_get_materials_filters PASSED [ 58%]
+backend\tests\test_database.py::TestMaterialOperations::test_increment_downloads PASSED [ 60%]
+backend\tests\test_database.py::TestStatsOperations::test_get_stats PASSED [ 63%]
+backend\tests\test_simple.py::test_simple_async PASSED                   [ 65%]
+backend\tests\test_workflows.py::TestUserJourney::test_parent_complete_journey PASSED [ 68%]
+backend\tests\test_workflows.py::TestUserJourney::test_educator_complete_journey PASSED [ 70%]
+backend\tests\test_workflows.py::TestMaterialWorkflow::test_material_discovery_and_download PASSED [ 73%]
+backend\tests\test_workflows.py::TestMaterialWorkflow::test_material_engagement_workflow PASSED [ 75%]
+backend\tests\test_workflows.py::TestSearchAndFilterWorkflow::test_progressive_filtering PASSED [ 78%]
+backend\tests\test_workflows.py::TestSearchAndFilterWorkflow::test_pagination_workflow PASSED [ 80%]
+backend\tests\test_workflows.py::TestAuthorizationWorkflow::test_parent_cannot_submit_material PASSED [ 82%]
+backend\tests\test_workflows.py::TestAuthorizationWorkflow::test_educator_can_submit_material PASSED [ 85%]
+backend\tests\test_workflows.py::TestAuthorizationWorkflow::test_unauthenticated_access PASSED [ 87%]
+backend\tests\test_workflows.py::TestErrorRecoveryWorkflow::test_invalid_login_then_valid_login PASSED [ 90%]
+backend\tests\test_workflows.py::TestErrorRecoveryWorkflow::test_search_no_results_then_valid_search PASSED [ 92%]
+backend\tests\test_workflows.py::TestErrorRecoveryWorkflow::test_invalid_material_id_then_valid_id PASSED [ 95%]
+backend\tests\test_workflows.py::TestDataConsistency::test_stats_consistency_after_operations PASSED [ 97%]
+backend\tests\test_workflows.py::TestDataConsistency::test_material_count_consistency PASSED [100%]
+
+============================= 41 passed in 13.20s =============================

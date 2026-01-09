@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { api, User } from '@/services/api';
+import * as api from '@/services/api';
+import { User } from '@/services/api';
+import { tokenStorage } from '@/lib/tokenStorage';
+import { ApiError } from '@/lib/apiErrors';
 
 interface AuthContextType {
   user: User | null;
@@ -15,11 +18,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Load user on mount if token exists
   useEffect(() => {
     const loadUser = async () => {
-      const response = await api.getCurrentUser();
-      if (response.success && response.data) {
-        setUser(response.data);
+      if (tokenStorage.isAuthenticated()) {
+        try {
+          const userData = await api.getCurrentUser();
+          setUser(userData);
+        } catch (error) {
+          // Token invalid or expired, clear it
+          tokenStorage.removeToken();
+        }
       }
       setIsLoading(false);
     };
@@ -27,26 +36,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await api.login({ email, password });
-    if (response.success && response.data) {
-      setUser(response.data);
+    try {
+      const userData = await api.login(email, password);
+      setUser(userData);
       return { success: true };
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : 'Login failed';
+      return { success: false, error: message };
     }
-    return { success: false, error: response.error };
   };
 
   const register = async (email: string, password: string, name: string, role: 'parent' | 'educator') => {
-    const response = await api.register({ email, password, name, role });
-    if (response.success && response.data) {
-      setUser(response.data);
+    try {
+      const userData = await api.register({ email, password, name, role });
+      setUser(userData);
       return { success: true };
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : 'Registration failed';
+      return { success: false, error: message };
     }
-    return { success: false, error: response.error };
   };
 
   const logout = async () => {
-    await api.logout();
-    setUser(null);
+    try {
+      await api.logout();
+    } finally {
+      setUser(null);
+    }
   };
 
   return (

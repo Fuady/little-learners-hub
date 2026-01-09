@@ -1,0 +1,12 @@
+============================= test session starts =============================
+platform win32 -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0 -- C:\Program Files\Python39\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\amfua\Documents\GitHub\kid_apps\little-learners-hub\backend
+configfile: pyproject.toml
+plugins: anyio-4.11.0, langsmith-0.4.37, asyncio-1.2.0
+asyncio: mode=auto, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 1 item
+
+backend\tests\test_simple.py::test_simple_async PASSED                   [100%]
+
+============================== 1 passed in 0.15s ==============================

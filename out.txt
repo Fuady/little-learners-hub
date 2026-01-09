@@ -1,0 +1,61 @@
+============================= test session starts =============================
+platform win32 -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0 -- C:\Program Files\Python39\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\amfua\Documents\GitHub\kid_apps\little-learners-hub\backend
+configfile: pyproject.toml
+plugins: anyio-4.11.0, langsmith-0.4.37, asyncio-1.2.0
+asyncio: mode=strict, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 1 item
+
+backend\tests\test_database.py::TestUserOperations::test_create_and_get_user FAILED [100%]
+
+================================== FAILURES ===================================
+_________________ TestUserOperations.test_create_and_get_user _________________
+
+self = <backend.tests.test_database.TestUserOperations object at 0x000001AEF2159A00>
+db_session = <async_generator object db_session at 0x000001AEF215B820>
+
+    async def test_create_and_get_user(self, db_session):
+        """Should create and retrieve user"""
+>       user = await create_user(
+            db_session,
+            email="test@example.com",
+            password="password",
+            name="Test User",
+            role=UserRole.parent
+        )
+
+backend\tests\test_database.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+db = <async_generator object db_session at 0x000001AEF215B820>
+email = 'test@example.com', password = 'password', name = 'Test User'
+role = <UserRole.parent: 'parent'>
+
+    async def create_user(
+        db: AsyncSession, email: str, password: str, name: str, role: UserRole
+    ) -> User:
+        # Generate ID (UUID would be better, but staying simple for now or letting DB handle if auto-increment,
+        # but our model defined String ID. I'll generate a UUID here or simple generic ID if seeding)
+        import uuid
+        user_id = str(uuid.uuid4())
+    
+        hashed_password = get_password_hash(password)
+    
+        db_user = User(
+            id=user_id,
+            email=email,
+            name=name,
+            role=role.value,
+            avatar="\U0001f468\u200d\U0001f469\u200d\U0001f467" if role == UserRole.parent else "\U0001f468\u200d\U0001f3eb",
+            hashed_password=hashed_password,
+            created_at=datetime.utcnow(),
+        )
+    
+>       db.add(db_user)
+E       AttributeError: 'async_generator' object has no attribute 'add'
+
+backend\database.py:53: AttributeError
+=========================== short test summary info ===========================
+FAILED backend\tests\test_database.py::TestUserOperations::test_create_and_get_user
+============================== 1 failed in 0.54s ==============================

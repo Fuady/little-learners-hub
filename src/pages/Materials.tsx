@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
-import { api, Material } from '@/services/api';
+import * as api from '@/services/api';
+import { Material } from '@/services/api';
 import { MaterialCard } from '@/components/MaterialCard';
 import { GradeSelector } from '@/components/GradeSelector';
 import { TypeFilter } from '@/components/TypeFilter';
@@ -19,17 +20,20 @@ export default function Materials() {
   useEffect(() => {
     const loadMaterials = async () => {
       setIsLoading(true);
-      const result = await api.getMaterials({
-        gradeLevel: selectedGrade as Material['gradeLevel'] | undefined,
-        type: selectedType || undefined,
-        search: search || undefined,
-      });
-      if (result.success && result.data) {
-        setMaterials(result.data);
+      try {
+        const result = await api.getMaterials({
+          gradeLevel: selectedGrade as Material['gradeLevel'] | undefined,
+          type: selectedType || undefined,
+          search: search || undefined,
+        });
+        setMaterials(result.items);
+      } catch (error) {
+        console.error('Failed to load materials:', error);
+        setMaterials([]);
       }
       setIsLoading(false);
     };
-    
+
     const debounce = setTimeout(loadMaterials, 300);
     return () => clearTimeout(debounce);
   }, [selectedGrade, selectedType, search]);

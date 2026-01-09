@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { api, Material } from '@/services/api';
+import * as api from '@/services/api';
+import { Material } from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
 
 const materialTypes: { id: Material['type']; label: string; emoji: string }[] = [
@@ -37,6 +38,8 @@ export default function Submit() {
   const [gradeLevel, setGradeLevel] = useState<Material['gradeLevel']>('kindergarten');
   const [isInteractive, setIsInteractive] = useState(false);
   const [tags, setTags] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!user) {
     return (
@@ -69,20 +72,20 @@ export default function Submit() {
     setIsSubmitting(true);
     setError('');
 
-    const result = await api.submitMaterial({
-      title,
-      description,
-      type,
-      gradeLevel,
-      isInteractive,
-      tags: tags.split(',').map(t => t.trim()).filter(Boolean),
-    });
-
-    if (result.success) {
+    try {
+      await api.submitMaterial({
+        title,
+        description,
+        type,
+        gradeLevel,
+        isInteractive,
+        tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+        file: selectedFile || undefined,
+      });
       setSuccess(true);
       setTimeout(() => navigate('/materials'), 2000);
-    } else {
-      setError(result.error || 'Failed to submit material');
+    } catch (error: any) {
+      setError(error.message || 'Failed to submit material');
     }
     setIsSubmitting(false);
   };
@@ -202,17 +205,43 @@ export default function Submit() {
                 />
               </div>
 
-              {/* File Upload (Mock) */}
+              {/* File Upload */}
               <div className="space-y-2">
                 <Label className="font-bold">Upload File (Optional)</Label>
-                <div className="border-2 border-dashed border-primary/30 rounded-2xl p-8 text-center bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors">
-                  <span className="text-4xl block mb-2">📁</span>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                  className="hidden"
+                />
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-colors ${selectedFile ? 'border-mint bg-mint/10' : 'border-primary/30 bg-muted/30 hover:bg-muted/50'
+                    }`}
+                >
+                  <span className="text-4xl block mb-2">
+                    {selectedFile ? '✅' : '📁'}
+                  </span>
                   <p className="text-muted-foreground">
-                    Drag and drop or click to upload
+                    {selectedFile ? selectedFile.name : 'Drag and drop or click to upload'}
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    PDF, images, or interactive files
+                    {selectedFile ? `${(selectedFile.size / 1024).toFixed(1)} KB` : 'PDF, images, or interactive files'}
                   </p>
+                  {selectedFile && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="mt-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedFile(null);
+                      }}
+                    >
+                      Remove File
+                    </Button>
+                  )}
                 </div>
               </div>
 

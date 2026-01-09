@@ -1,0 +1,599 @@
+============================= test session starts =============================
+platform win32 -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0 -- C:\Program Files\Python39\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\amfua\Documents\GitHub\kid_apps\little-learners-hub\backend
+configfile: pyproject.toml
+plugins: anyio-4.11.0, langsmith-0.4.37, asyncio-1.2.0
+asyncio: mode=auto, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 41 items
+
+backend\tests\test_api.py::TestHealthEndpoints::test_root PASSED         [  2%]
+backend\tests\test_api.py::TestHealthEndpoints::test_health PASSED       [  4%]
+backend\tests\test_api.py::TestAuthEndpoints::test_login_success PASSED  [  7%]
+backend\tests\test_api.py::TestAuthEndpoints::test_login_invalid_credentials PASSED [  9%]
+backend\tests\test_api.py::TestAuthEndpoints::test_register_success PASSED [ 12%]
+backend\tests\test_api.py::TestAuthEndpoints::test_register_duplicate_email PASSED [ 14%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_list_materials PASSED [ 17%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_list_materials_with_type_filter PASSED [ 19%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_list_materials_with_grade_filter PASSED [ 21%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_list_materials_with_search FAILED [ 24%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_get_material_by_id PASSED [ 26%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_get_material_not_found PASSED [ 29%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_download_material PASSED [ 31%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_like_material_with_auth PASSED [ 34%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_submit_material_as_educator PASSED [ 36%]
+backend\tests\test_api.py::TestMaterialsEndpoints::test_submit_material_as_parent_fails PASSED [ 39%]
+backend\tests\test_api.py::TestStatsEndpoints::test_get_stats PASSED     [ 41%]
+backend\tests\test_api.py::TestUsersEndpoints::test_get_current_user_with_auth PASSED [ 43%]
+backend\tests\test_database.py::TestPasswordOperations::test_password_hash_creates_different_hashes PASSED [ 46%]
+backend\tests\test_database.py::TestPasswordOperations::test_verify_password_correct PASSED [ 48%]
+backend\tests\test_database.py::TestUserOperations::test_create_and_get_user PASSED [ 51%]
+backend\tests\test_database.py::TestUserOperations::test_get_user_by_email_nonexistent PASSED [ 53%]
+backend\tests\test_database.py::TestMaterialOperations::test_create_and_get_material PASSED [ 56%]
+backend\tests\test_database.py::TestMaterialOperations::test_get_materials_filters PASSED [ 58%]
+backend\tests\test_database.py::TestMaterialOperations::test_increment_downloads PASSED [ 60%]
+backend\tests\test_database.py::TestStatsOperations::test_get_stats PASSED [ 63%]
+backend\tests\test_simple.py::test_simple_async PASSED                   [ 65%]
+backend\tests\test_workflows.py::TestUserJourney::test_parent_complete_journey FAILED [ 68%]
+backend\tests\test_workflows.py::TestUserJourney::test_educator_complete_journey FAILED [ 70%]
+backend\tests\test_workflows.py::TestMaterialWorkflow::test_material_discovery_and_download FAILED [ 73%]
+backend\tests\test_workflows.py::TestMaterialWorkflow::test_material_engagement_workflow PASSED [ 75%]
+backend\tests\test_workflows.py::TestSearchAndFilterWorkflow::test_progressive_filtering FAILED [ 78%]
+backend\tests\test_workflows.py::TestSearchAndFilterWorkflow::test_pagination_workflow PASSED [ 80%]
+backend\tests\test_workflows.py::TestAuthorizationWorkflow::test_parent_cannot_submit_material PASSED [ 82%]
+backend\tests\test_workflows.py::TestAuthorizationWorkflow::test_educator_can_submit_material PASSED [ 85%]
+backend\tests\test_workflows.py::TestAuthorizationWorkflow::test_unauthenticated_access FAILED [ 87%]
+backend\tests\test_workflows.py::TestErrorRecoveryWorkflow::test_invalid_login_then_valid_login PASSED [ 90%]
+backend\tests\test_workflows.py::TestErrorRecoveryWorkflow::test_search_no_results_then_valid_search FAILED [ 92%]
+backend\tests\test_workflows.py::TestErrorRecoveryWorkflow::test_invalid_material_id_then_valid_id PASSED [ 95%]
+backend\tests\test_workflows.py::TestDataConsistency::test_stats_consistency_after_operations PASSED [ 97%]
+backend\tests\test_workflows.py::TestDataConsistency::test_material_count_consistency PASSED [100%]
+
+================================== FAILURES ===================================
+___________ TestMaterialsEndpoints.test_list_materials_with_search ____________
+
+self = <backend.tests.test_api.TestMaterialsEndpoints object at 0x00000202A9F54370>
+client = <httpx.AsyncClient object at 0x00000202AA20EA90>
+seeded_materials = [{'author_id': '526351e1-b73c-4ce6-b9e6-5e3d22e04215', 'author_name': 'Mr. Thompson', 'created_at': '2026-01-09T18:22:19.991389', 'description': 'Description 1', ...}]
+
+    async def test_list_materials_with_search(self, client, seeded_materials):
+>       response = await client.get("/api/v1/materials?search=Test")
+
+backend\tests\test_api.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1768: in get
+    return await self.request(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1540: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1629: in send
+    response = await self._send_handling_auth(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1657: in _send_handling_auth
+    response = await self._send_handling_redirects(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1694: in _send_handling_redirects
+    response = await self._send_single_request(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1730: in _send_single_request
+    response = await transport.handle_async_request(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_transports\asgi.py:170: in handle_async_request
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\applications.py:1135: in __call__
+    await super().__call__(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\applications.py:113: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\cors.py:85: in __call__
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:716: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:736: in app
+    await route.handle(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:290: in handle
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:115: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:101: in app
+    response = await f(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:355: in app
+    raw_response = await run_endpoint_function(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:243: in run_endpoint_function
+    return await dependant.call(**values)
+backend\routers\materials.py:44: in list_materials
+    materials_db, total = await get_materials(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+db = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x00000202AA2576A0>
+material_type = None, grade_level = None, search = 'Test', limit = 50
+offset = 0
+
+    async def get_materials(
+        db: AsyncSession,
+        material_type: Optional[MaterialType] = None,
+        grade_level: Optional[GradeLevel] = None,
+        search: Optional[str] = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> Tuple[List[Material], int]:
+        query = select(Material)
+    
+        if material_type:
+            query = query.where(Material.type == material_type.value)
+    
+        if grade_level:
+            query = query.where(Material.grade_level == grade_level.value)
+    
+        if search:
+            search_lower = f"%{search.lower()}%"
+            query = query.where(
+                or_(
+                    func.lower(Material.title).like(search_lower),
+                    func.lower(Material.description).like(search_lower),
+                    # Search in tags needs JSON logic depending on DB (Postgres vs SQLite)
+                    # For compatibility/simplicity, we might skip tag search in SQL or use naive string match if stored as JSON/String
+                    # SQLite JSON functions vs Postgres API.
+                    # Assuming simple string matching for now or robust logic?
+                    # Let's try to match serialized JSON text for simplicity across DBs:
+>                   func.cast(Material.tags, String).like(search_lower)
+                )
+            )
+E           NameError: name 'String' is not defined
+
+backend\database.py:86: NameError
+________________ TestUserJourney.test_parent_complete_journey _________________
+
+self = <backend.tests.test_workflows.TestUserJourney object at 0x00000202A9F7E4F0>
+
+    def test_parent_complete_journey(self):
+        """Test parent user: register \u2192 login \u2192 browse \u2192 like \u2192 logout"""
+        # Step 1: Register
+        register_response = client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "journey_parent@test.com",
+                "password": "testpass123",
+                "name": "Journey Parent",
+                "role": "parent",
+            },
+        )
+>       assert register_response.status_code == 201
+E       assert 400 == 201
+E        +  where 400 = <Response [400 Bad Request]>.status_code
+
+backend\tests\test_workflows.py:27: AssertionError
+_______________ TestUserJourney.test_educator_complete_journey ________________
+
+self = <backend.tests.test_workflows.TestUserJourney object at 0x00000202A9F7E6A0>
+
+    def test_educator_complete_journey(self):
+        """Test educator: register \u2192 login \u2192 submit material \u2192 verify"""
+        # Step 1: Register as educator
+        register_response = client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "journey_educator@test.com",
+                "password": "testpass123",
+                "name": "Journey Educator",
+                "role": "educator",
+            },
+        )
+>       assert register_response.status_code == 201
+E       assert 400 == 201
+E        +  where 400 = <Response [400 Bad Request]>.status_code
+
+backend\tests\test_workflows.py:74: AssertionError
+__________ TestMaterialWorkflow.test_material_discovery_and_download __________
+
+self = <backend.tests.test_workflows.TestMaterialWorkflow object at 0x00000202A9F7E8E0>
+
+    def test_material_discovery_and_download(self):
+        """Test: search \u2192 filter \u2192 view \u2192 download"""
+        # Step 1: Search for materials
+>       search_response = client.get("/api/v1/materials?search=math")
+
+backend\tests\test_workflows.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:479: in get
+    return super().get(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1053: in get
+    return self.request(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:451: in request
+    return super().request(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:914: in send
+    response = self._send_handling_auth(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:354: in handle_request
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:351: in handle_request
+    portal.call(self.app, scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\anyio\from_thread.py:321: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+C:\Program Files\Python39\lib\concurrent\futures\_base.py:438: in result
+    return self.__get_result()
+C:\Program Files\Python39\lib\concurrent\futures\_base.py:390: in __get_result
+    raise self._exception
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\anyio\from_thread.py:252: in _call_func
+    retval = await retval_or_awaitable
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\applications.py:1135: in __call__
+    await super().__call__(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\applications.py:113: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\cors.py:85: in __call__
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:716: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:736: in app
+    await route.handle(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:290: in handle
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:115: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:101: in app
+    response = await f(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:355: in app
+    raw_response = await run_endpoint_function(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:243: in run_endpoint_function
+    return await dependant.call(**values)
+backend\routers\materials.py:44: in list_materials
+    materials_db, total = await get_materials(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+db = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x00000202AA571D00>
+material_type = None, grade_level = None, search = 'math', limit = 50
+offset = 0
+
+    async def get_materials(
+        db: AsyncSession,
+        material_type: Optional[MaterialType] = None,
+        grade_level: Optional[GradeLevel] = None,
+        search: Optional[str] = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> Tuple[List[Material], int]:
+        query = select(Material)
+    
+        if material_type:
+            query = query.where(Material.type == material_type.value)
+    
+        if grade_level:
+            query = query.where(Material.grade_level == grade_level.value)
+    
+        if search:
+            search_lower = f"%{search.lower()}%"
+            query = query.where(
+                or_(
+                    func.lower(Material.title).like(search_lower),
+                    func.lower(Material.description).like(search_lower),
+                    # Search in tags needs JSON logic depending on DB (Postgres vs SQLite)
+                    # For compatibility/simplicity, we might skip tag search in SQL or use naive string match if stored as JSON/String
+                    # SQLite JSON functions vs Postgres API.
+                    # Assuming simple string matching for now or robust logic?
+                    # Let's try to match serialized JSON text for simplicity across DBs:
+>                   func.cast(Material.tags, String).like(search_lower)
+                )
+            )
+E           NameError: name 'String' is not defined
+
+backend\database.py:86: NameError
+___________ TestSearchAndFilterWorkflow.test_progressive_filtering ____________
+
+self = <backend.tests.test_workflows.TestSearchAndFilterWorkflow object at 0x00000202A9F7ECD0>
+
+    def test_progressive_filtering(self):
+        """Test: all materials \u2192 filter type \u2192 add grade \u2192 add search"""
+        # Step 1: Get all materials
+        all_response = client.get("/api/v1/materials")
+        all_total = all_response.json()["total"]
+        assert all_total > 0
+    
+        # Step 2: Filter by type
+        type_response = client.get("/api/v1/materials?type=game")
+        type_total = type_response.json()["total"]
+        assert type_total <= all_total
+        assert type_total > 0
+    
+        # Step 3: Add grade filter
+        type_grade_response = client.get(
+            "/api/v1/materials?type=game&gradeLevel=grade2"
+        )
+        type_grade_total = type_grade_response.json()["total"]
+        assert type_grade_total <= type_total
+    
+        # Step 4: Add search term
+>       full_filter_response = client.get(
+            "/api/v1/materials?type=game&gradeLevel=grade2&search=math"
+        )
+
+backend\tests\test_workflows.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:479: in get
+    return super().get(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1053: in get
+    return self.request(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:451: in request
+    return super().request(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:914: in send
+    response = self._send_handling_auth(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:354: in handle_request
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:351: in handle_request
+    portal.call(self.app, scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\anyio\from_thread.py:321: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+C:\Program Files\Python39\lib\concurrent\futures\_base.py:438: in result
+    return self.__get_result()
+C:\Program Files\Python39\lib\concurrent\futures\_base.py:390: in __get_result
+    raise self._exception
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\anyio\from_thread.py:252: in _call_func
+    retval = await retval_or_awaitable
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\applications.py:1135: in __call__
+    await super().__call__(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\applications.py:113: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\cors.py:85: in __call__
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:716: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:736: in app
+    await route.handle(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:290: in handle
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:115: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:101: in app
+    response = await f(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:355: in app
+    raw_response = await run_endpoint_function(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:243: in run_endpoint_function
+    return await dependant.call(**values)
+backend\routers\materials.py:44: in list_materials
+    materials_db, total = await get_materials(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+db = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x00000202AAA71F70>
+material_type = <MaterialType.game: 'game'>
+grade_level = <GradeLevel.grade2: 'grade2'>, search = 'math', limit = 50
+offset = 0
+
+    async def get_materials(
+        db: AsyncSession,
+        material_type: Optional[MaterialType] = None,
+        grade_level: Optional[GradeLevel] = None,
+        search: Optional[str] = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> Tuple[List[Material], int]:
+        query = select(Material)
+    
+        if material_type:
+            query = query.where(Material.type == material_type.value)
+    
+        if grade_level:
+            query = query.where(Material.grade_level == grade_level.value)
+    
+        if search:
+            search_lower = f"%{search.lower()}%"
+            query = query.where(
+                or_(
+                    func.lower(Material.title).like(search_lower),
+                    func.lower(Material.description).like(search_lower),
+                    # Search in tags needs JSON logic depending on DB (Postgres vs SQLite)
+                    # For compatibility/simplicity, we might skip tag search in SQL or use naive string match if stored as JSON/String
+                    # SQLite JSON functions vs Postgres API.
+                    # Assuming simple string matching for now or robust logic?
+                    # Let's try to match serialized JSON text for simplicity across DBs:
+>                   func.cast(Material.tags, String).like(search_lower)
+                )
+            )
+E           NameError: name 'String' is not defined
+
+backend\database.py:86: NameError
+____________ TestAuthorizationWorkflow.test_unauthenticated_access ____________
+
+self = <backend.tests.test_workflows.TestAuthorizationWorkflow object at 0x00000202A9F8E430>
+
+    def test_unauthenticated_access(self):
+        """Test that unauthenticated users can browse but not interact"""
+        # Can browse materials
+        browse_response = client.get("/api/v1/materials")
+        assert browse_response.status_code == 200
+    
+        # Can view material details
+        detail_response = client.get("/api/v1/materials/1")
+        assert detail_response.status_code == 200
+    
+        # Can download (no auth required)
+        download_response = client.post("/api/v1/materials/1/download")
+        assert download_response.status_code == 200
+    
+        # Cannot like (auth required)
+        like_response = client.post("/api/v1/materials/1/like")
+>       assert like_response.status_code == 403
+E       assert 401 == 403
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+backend\tests\test_workflows.py:316: AssertionError
+_____ TestErrorRecoveryWorkflow.test_search_no_results_then_valid_search ______
+
+self = <backend.tests.test_workflows.TestErrorRecoveryWorkflow object at 0x00000202A9F8E820>
+
+    def test_search_no_results_then_valid_search(self):
+        """Test recovery from empty search results"""
+        # Search with no results
+>       empty_response = client.get("/api/v1/materials?search=xyznoresults")
+
+backend\tests\test_workflows.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:479: in get
+    return super().get(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1053: in get
+    return self.request(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:451: in request
+    return super().request(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:914: in send
+    response = self._send_handling_auth(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\httpx\_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:354: in handle_request
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\testclient.py:351: in handle_request
+    portal.call(self.app, scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\anyio\from_thread.py:321: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+C:\Program Files\Python39\lib\concurrent\futures\_base.py:445: in result
+    return self.__get_result()
+C:\Program Files\Python39\lib\concurrent\futures\_base.py:390: in __get_result
+    raise self._exception
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\anyio\from_thread.py:252: in _call_func
+    retval = await retval_or_awaitable
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\applications.py:1135: in __call__
+    await super().__call__(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\applications.py:113: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\cors.py:85: in __call__
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:716: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:736: in app
+    await route.handle(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\routing.py:290: in handle
+    await self.app(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:115: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:101: in app
+    response = await f(request)
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:355: in app
+    raw_response = await run_endpoint_function(
+..\..\..\..\AppData\Roaming\Python\Python39\site-packages\fastapi\routing.py:243: in run_endpoint_function
+    return await dependant.call(**values)
+backend\routers\materials.py:44: in list_materials
+    materials_db, total = await get_materials(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+db = <sqlalchemy.ext.asyncio.session.AsyncSession object at 0x00000202AA26AF70>
+material_type = None, grade_level = None, search = 'xyznoresults', limit = 50
+offset = 0
+
+    async def get_materials(
+        db: AsyncSession,
+        material_type: Optional[MaterialType] = None,
+        grade_level: Optional[GradeLevel] = None,
+        search: Optional[str] = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> Tuple[List[Material], int]:
+        query = select(Material)
+    
+        if material_type:
+            query = query.where(Material.type == material_type.value)
+    
+        if grade_level:
+            query = query.where(Material.grade_level == grade_level.value)
+    
+        if search:
+            search_lower = f"%{search.lower()}%"
+            query = query.where(
+                or_(
+                    func.lower(Material.title).like(search_lower),
+                    func.lower(Material.description).like(search_lower),
+                    # Search in tags needs JSON logic depending on DB (Postgres vs SQLite)
+                    # For compatibility/simplicity, we might skip tag search in SQL or use naive string match if stored as JSON/String
+                    # SQLite JSON functions vs Postgres API.
+                    # Assuming simple string matching for now or robust logic?
+                    # Let's try to match serialized JSON text for simplicity across DBs:
+>                   func.cast(Material.tags, String).like(search_lower)
+                )
+            )
+E           NameError: name 'String' is not defined
+
+backend\database.py:86: NameError
+=========================== short test summary info ===========================
+FAILED backend\tests\test_api.py::TestMaterialsEndpoints::test_list_materials_with_search
+FAILED backend\tests\test_workflows.py::TestUserJourney::test_parent_complete_journey
+FAILED backend\tests\test_workflows.py::TestUserJourney::test_educator_complete_journey
+FAILED backend\tests\test_workflows.py::TestMaterialWorkflow::test_material_discovery_and_download
+FAILED backend\tests\test_workflows.py::TestSearchAndFilterWorkflow::test_progressive_filtering
+FAILED backend\tests\test_workflows.py::TestAuthorizationWorkflow::test_unauthenticated_access
+FAILED backend\tests\test_workflows.py::TestErrorRecoveryWorkflow::test_search_no_results_then_valid_search
+======================== 7 failed, 34 passed in 11.32s ========================

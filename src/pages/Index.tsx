@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { api, Material } from '@/services/api';
+import * as api from '@/services/api';
+import { Material } from '@/services/api';
 import { MaterialCard } from '@/components/MaterialCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginModal } from '@/components/LoginModal';
@@ -32,9 +33,13 @@ export default function Index() {
 
   useEffect(() => {
     const loadData = async () => {
-      const [materialsRes, statsRes] = await Promise.all([api.getMaterials(), api.getStats()]);
-      if (materialsRes.success && materialsRes.data) setFeaturedMaterials(materialsRes.data.slice(0, 4));
-      if (statsRes.success && statsRes.data) setStats({ materials: statsRes.data.totalMaterials, downloads: statsRes.data.totalDownloads });
+      try {
+        const [materialsRes, statsRes] = await Promise.all([api.getMaterials({ limit: 4 }), api.getStats()]);
+        setFeaturedMaterials(materialsRes.items);
+        setStats({ materials: statsRes.totalMaterials, downloads: statsRes.totalDownloads });
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      }
     };
     loadData();
   }, []);

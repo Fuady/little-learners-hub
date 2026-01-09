@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { api, Material } from '@/services/api';
+import * as api from '@/services/api';
+import { Material } from '@/services/api';
 import { MaterialCard } from '@/components/MaterialCard';
 import { GradeSelector } from '@/components/GradeSelector';
 
@@ -11,30 +12,19 @@ export default function Games() {
   useEffect(() => {
     const loadMaterials = async () => {
       setIsLoading(true);
-      const result = await api.getMaterials({
-        type: 'game',
-        gradeLevel: selectedGrade as Material['gradeLevel'] | undefined,
-      });
-      if (result.success && result.data) {
-        setMaterials(result.data);
+      try {
+        const [gamesRes, puzzlesRes] = await Promise.all([
+          api.getMaterials({ type: 'game', gradeLevel: selectedGrade as Material['gradeLevel'] | undefined }),
+          api.getMaterials({ type: 'puzzle', gradeLevel: selectedGrade as Material['gradeLevel'] | undefined }),
+        ]);
+        setMaterials([...gamesRes.items, ...puzzlesRes.items]);
+      } catch (error) {
+        console.error('Failed to load materials:', error);
+        setMaterials([]);
       }
       setIsLoading(false);
     };
     loadMaterials();
-  }, [selectedGrade]);
-
-  // Add puzzles too
-  useEffect(() => {
-    const loadPuzzles = async () => {
-      const result = await api.getMaterials({
-        type: 'puzzle',
-        gradeLevel: selectedGrade as Material['gradeLevel'] | undefined,
-      });
-      if (result.success && result.data) {
-        setMaterials(prev => [...prev, ...result.data!]);
-      }
-    };
-    loadPuzzles();
   }, [selectedGrade]);
 
   return (

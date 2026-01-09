@@ -8,7 +8,9 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..db import get_db
 from ..models import (
     User,
     UserCreate,
@@ -51,6 +53,7 @@ def decode_token(token: str) -> Optional[str]:
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: AsyncSession = Depends(get_db),
 ) -> User:
     token = credentials.credentials
     user_id = decode_token(token)
@@ -61,53 +64,56 @@ async def get_current_user(
             detail="Invalid or expired token",
         )
     
-    user_in_db = get_user_by_id(user_id)
+    # Pass db session
+    user_in_db = await get_user_by_id(db, user_id)
     if not user_in_db:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found",
         )
     
-    return User(
-        id=user_in_db.id,
-        email=user_in_db.email,
-        name=user_in_db.name,
-        role=user_in_db.role,
-        avatar=user_in_db.avatar,
-        created_at=user_in_db.created_at,
-    )
+    # Convert DB model to Pydantic model
+    return User.model_validate(user_in_db)
 
 
 async def get_current_user_optional(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(
         HTTPBearer(auto_error=False)
     ),
+    db: AsyncSession = Depends(get_db),
 ) -> Optional[User]:
     if not credentials:
         return None
     
     try:
-        return await get_current_user(credentials)
+        return await get_current_user(credentials, db)
     except HTTPException:
         return None
 
 
 @router.post("/register", response_model=AuthResponse, status_code=201)
-async def register(user_data: UserCreate):
+async def register(
+    user_data: UserCreate,
+    db: AsyncSession = Depends(get_db),
+):
     """Register a new user account"""
-    existing_user = get_user_by_email(user_data.email)
+    existing_user = await get_user_by_email(db, user_data.email)
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered",
         )
     
-    user = create_user(
+    user_db = await create_user(
+        db,
         email=user_data.email,
         password=user_data.password,
         name=user_data.name,
         role=user_data.role,
     )
+    
+    # Convert to Pydantic
+    user = User.model_validate(user_db)
     
     access_token = create_access_token(
         data={"sub": user.id},
@@ -121,9 +127,12 @@ async def register(user_data: UserCreate):
 
 
 @router.post("/login", response_model=AuthResponse)
-async def login(login_data: LoginRequest):
+async def login(
+    login_data: LoginRequest,
+    db: AsyncSession = Depends(get_db),
+):
     """Login with email and password"""
-    user_in_db = get_user_by_email(login_data.email)
+    user_in_db = await get_user_by_email(db, login_data.email)
     
     if not user_in_db or not verify_password(login_data.password, user_in_db.hashed_password):
         raise HTTPException(
@@ -131,14 +140,8 @@ async def login(login_data: LoginRequest):
             detail="Invalid email or password",
         )
     
-    user = User(
-        id=user_in_db.id,
-        email=user_in_db.email,
-        name=user_in_db.name,
-        role=user_in_db.role,
-        avatar=user_in_db.avatar,
-        created_at=user_in_db.created_at,
-    )
+    # Convert to Pydantic
+    user = User.model_validate(user_in_db)
     
     access_token = create_access_token(
         data={"sub": user.id},

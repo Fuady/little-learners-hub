@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Material, api } from '@/services/api';
+import { Material } from '@/services/api';
+import * as api from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface MaterialCardProps {
@@ -37,22 +38,32 @@ export function MaterialCard({ material }: MaterialCardProps) {
 
   const handleLike = async () => {
     setIsLiking(true);
-    const result = await api.likeMaterial(material.id);
-    if (result.success && result.data) {
-      setLikes(result.data.likes);
+    try {
+      const newLikes = await api.likeMaterial(material.id);
+      setLikes(newLikes);
+    } catch (error) {
+      console.error('Failed to like material:', error);
+    } finally {
+      setIsLiking(false);
     }
-    setIsLiking(false);
   };
 
   const handleDownload = async () => {
     setIsDownloading(true);
-    const result = await api.downloadMaterial(material.id);
-    if (result.success) {
+    try {
+      const url = await api.downloadMaterial(material.id);
       setDownloads(downloads + 1);
       // In a real app, this would trigger a file download
-      alert('Download started! (Mock)');
+      if (url) {
+        window.open(url, '_blank');
+      } else {
+        alert('Download started!');
+      }
+    } catch (error) {
+      console.error('Failed to download material:', error);
+    } finally {
+      setIsDownloading(false);
     }
-    setIsDownloading(false);
   };
 
   const handlePlay = () => {
@@ -79,7 +90,7 @@ export function MaterialCard({ material }: MaterialCardProps) {
         <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
           {material.description}
         </p>
-        
+
         <div className="flex flex-wrap gap-2 mb-3">
           <Badge variant="outline" className="text-xs">
             {gradeLabels[material.gradeLevel]}

@@ -3,8 +3,10 @@ KidLearn API - FastAPI Backend
 Educational platform for kids from Kindergarten to Grade 5
 """
 
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from .routers import auth, materials, stats, users
 
@@ -29,7 +31,8 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify actual origins
+    allow_origins=["*"] if os.getenv("ENV") != "production" else [],
+    allow_origin_regex="http://localhost:.*|http://127.0.0.1:.*|http://192.168.18..*:.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -40,6 +43,11 @@ app.include_router(auth.router, prefix="/api/v1")
 app.include_router(users.router, prefix="/api/v1")
 app.include_router(materials.router, prefix="/api/v1")
 app.include_router(stats.router, prefix="/api/v1")
+
+# Static files for uploads
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
+os.makedirs(os.path.join(UPLOAD_DIR, "materials"), exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 
 @app.get("/")
