@@ -49,10 +49,12 @@ UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
 os.makedirs(os.path.join(UPLOAD_DIR, "materials"), exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
+# Serve Frontend (only in production or when dist exists)
+FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "dist")
 
-@app.get("/")
+@app.get("/api/info")
 async def root():
-    """Root endpoint - API info"""
+    """API info endpoint"""
     return {
         "name": "KidLearn API",
         "version": "1.0.0",
@@ -60,8 +62,29 @@ async def root():
         "status": "running",
     }
 
-
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy"}
+
+# Mount frontend static files
+if os.path.exists(FRONTEND_DIR):
+    app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIR, "assets")), name="assets")
+    
+    # Catch-all for SPA
+    from fastapi.responses import FileResponse
+    
+    @app.get("/{rest_of_path:path}")
+    async def serve_frontend(rest_of_path: str):
+        # Skip if it's an API route that somehow got here
+        if rest_of_path.startswith("api/") or rest_of_path.startswith("docs") or rest_of_path.startswith("openapi.json"):
+            return {"detail": "Not Found"}
+            
+        index_file = os.path.join(FRONTEND_DIR, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        return {"detail": "Frontend not found"}
+else:
+    @app.get("/")
+    async def root_dev():
+        return {"message": "Backend is running. Frontend not found in /dist"}
