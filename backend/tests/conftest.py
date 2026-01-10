@@ -13,8 +13,9 @@ from backend.db import get_db, Base
 from backend.db_models import User, Material # Ensure models are imported for metadata
 from backend.models import UserRole
 
-# Use in-memory SQLite for tests
-TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+import os
+# Use in-memory SQLite for tests by default, allow override via env
+TEST_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///:memory:")
 
 @pytest_asyncio.fixture(scope="function")
 async def db_engine():
